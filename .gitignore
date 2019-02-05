@@ -1,0 +1,4 @@
+data/web/php
+data/web/static
+data/symfony-logs
+!.keepme

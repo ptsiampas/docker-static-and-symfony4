@@ -1,0 +1,36 @@
+version: "3.5"
+
+services: 
+  static:
+    image: nginx:latest
+    ports: 
+      - "80:80"
+    volumes:
+      - ./data/web:/var/www/web:cached
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/site.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - internal
+  
+  symfony:
+    image: nginx:latest
+    # ports: 
+    #   - "80:80"
+    volumes:
+      - ./data/web/php:/var/www/html:cached
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/site_symfony.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - internal
+  
+  fpm:
+    image: php:fpm
+    volumes:
+      - ./data/web/php:/var/www/html:cached
+      - ./config/php-fpm-debug.conf:/usr/local/etc/php/conf.d/zz_php-fpm-debug.conf
+      - ./data/symfony-logs:/var/www/symfony/var/log:cached
+    networks:
+      - internal
+
+networks:
+  internal:
